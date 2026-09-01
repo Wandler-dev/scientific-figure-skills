@@ -1,0 +1,26 @@
+{
+  "benchmark_version": "1.0",
+  "benchmark_id": "B03",
+  "title": "Plan-bounded geometry repair",
+  "objective": "Out-of-bounds geometry and a broken plan-owned endpoint are repaired without editing the input.",
+  "canvas": {"width": 1000, "height": 560},
+  "final_size": {"width": 180, "height": 100.8, "unit": "mm", "minimum_text_size_pt": 6.5},
+  "elements": [
+    {"id": "source-node", "label": "Source Node", "role": "content", "x": 120, "y": 220, "width": 240, "height": 90, "font_size_px": 18},
+    {"id": "target-node", "label": "Target Node", "role": "content", "x": 640, "y": 220, "width": 240, "height": 90, "font_size_px": 18}
+  ],
+  "connectors": [
+    {"id": "source-target", "source": "source-node", "target": "target-node", "relation": "directed workflow", "directed": true}
+  ],
+  "forbidden_relations": [],
+  "formats": ["svg"],
+  "mutation": "out_of_bounds_wrap_and_endpoint",
+  "expected": {
+    "repair_complete": true,
+    "action_codes": [
+      "repair.style.wrap_added",
+      "repair.geometry.restored_from_plan",
+      "repair.connector.restored_from_plan"
+    ]
+  }
+}

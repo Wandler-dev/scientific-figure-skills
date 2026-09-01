@@ -1,0 +1,99 @@
+{
+  "registry_version": "1.3",
+  "package_version": "1.3.1",
+  "default_backend": null,
+  "backends": {
+    "drawio": {
+      "enabled": true,
+      "default": false,
+      "selection": "Use only when the FigureSpec prefers Draw.io or editable structured-diagram authoring is an appropriate implementation choice.",
+      "figure_kinds": [
+        "method overview",
+        "architecture",
+        "workflow",
+        "evaluation framework",
+        "hierarchy",
+        "process schematic"
+      ],
+      "operations": {
+        "plan": {"implementation": "internal", "available": true},
+        "author": {"implementation": "internal", "available": true},
+        "lint": {"implementation": "internal", "available": true},
+        "export": {
+          "implementation": "external_cli",
+          "available": "dynamic",
+          "executable_candidates": ["drawio", "draw.io"],
+          "formats": ["svg", "pdf", "png"]
+        },
+        "inspect": {"implementation": "internal", "available": true},
+        "repair": {"implementation": "internal", "available": true}
+      }
+    },
+    "svg": {
+      "enabled": true,
+      "default": false,
+      "selection": "Use only when the FigureSpec calls for an editable structured diagram that should be delivered as native semantic SVG.",
+      "figure_kinds": [
+        "method overview",
+        "architecture",
+        "workflow",
+        "evaluation framework",
+        "hierarchy",
+        "process schematic"
+      ],
+      "operations": {
+        "plan": {"implementation": "internal", "available": true},
+        "author": {"implementation": "internal", "available": true},
+        "lint": {"implementation": "internal", "available": true},
+        "export": {
+          "implementation": "internal_svg_optional_external",
+          "available": true,
+          "formats": {
+            "svg": {"implementation": "internal", "available": true},
+            "png": {"implementation": "external_renderer", "available": "dynamic"},
+            "pdf": {"implementation": "external_renderer", "available": "dynamic"}
+          },
+          "renderer_candidates": ["rsvg-convert", "chromium", "chromium-browser", "google-chrome", "cairosvg"]
+        },
+        "inspect": {"implementation": "internal", "available": true},
+        "repair": {"implementation": "unavailable", "available": false}
+      }
+    },
+    "matplotlib": {
+      "enabled": true,
+      "default": false,
+      "selection": "Use for quantitative results only when a PlotPlan explicitly binds authoritative local data to conventional scientific plot encodings.",
+      "figure_kinds": [
+        "quantitative result",
+        "diagnostic plot",
+        "line plot",
+        "scatter plot",
+        "bar plot",
+        "heatmap"
+      ],
+      "operations": {
+        "plan": {"implementation": "internal", "available": true},
+        "author": {"implementation": "internal", "available": true},
+        "data_binding": {"implementation": "internal", "available": true},
+        "lint": {"implementation": "internal", "available": true},
+        "export": {
+          "implementation": "optional_python_runtime",
+          "available": "dynamic",
+          "module": "matplotlib",
+          "formats": ["svg", "pdf", "png"]
+        },
+        "inspect": {"implementation": "internal", "available": true},
+        "repair": {"implementation": "unavailable", "available": false}
+      }
+    }
+  },
+  "out_of_scope": {
+    "graphviz": "Not implemented by the bundled execution adapter.",
+    "pptx": "Not implemented by the bundled execution adapter.",
+    "tikz": "Not implemented by the bundled execution adapter.",
+    "image_generation": "Outside the bundled execution tracks.",
+    "ocr": "Outside the bundled execution tracks.",
+    "raster_to_editable": "Outside the bundled execution tracks.",
+    "multi_agent_orchestration": "Outside the bundled execution tracks."
+  }
+}

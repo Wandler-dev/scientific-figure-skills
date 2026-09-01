@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "F921-matplotlib-v1",
+  "figure_id": "F921",
+  "backend": "matplotlib",
+  "figure_spec": {
+    "path": "F921-grouped-bar.md",
+    "sha256": "d13611e858366b86871068c9e5a65f0994a2d12dbfbcca535b6ff778ac90a8f7",
+    "spec_version": "1.0",
+    "figure_id": "F921"
+  },
+  "target": {"width": 90, "height": 75, "unit": "mm", "dpi": 300, "minimum_text_size_pt": 6.5},
+  "data_sources": [
+    {
+      "id": "results",
+      "path": "data.csv",
+      "format": "csv",
+      "sha256": "b38a04224af81cd3e8405af5722859c628b7c469a6c10d14bb07d10514dd2d57",
+      "role": "authoritative_plot_data"
+    }
+  ],
+  "spec_coverage": {
+    "status": "COMPLETE",
+    "must_show": [
+      {
+        "id": "must-show-001",
+        "source_ref": "3.1 Must Show[1]",
+        "source_text": "Model A and Model B values for Accuracy and F1 with precomputed standard-deviation error bars.",
+        "status": "MAPPED",
+        "representations": [
+          {"kind": "panel", "ids": ["P1"]},
+          {"kind": "series", "ids": ["P1", "model-a"]},
+          {"kind": "series", "ids": ["P1", "model-b"]},
+          {"kind": "data_binding", "ids": ["results"]}
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "id": "relationships-001",
+        "source_ref": "4.1 Relationships[1]",
+        "source_text": "Metrics group the two model values. Relation: within-category comparison.",
+        "status": "MAPPED",
+        "representations": [
+          {"kind": "axis", "ids": ["P1", "x"]},
+          {"kind": "series", "ids": ["P1", "model-a"]},
+          {"kind": "series", "ids": ["P1", "model-b"]}
+        ]
+      }
+    ],
+    "required_labels": [
+      {
+        "id": "required-labels-001",
+        "source_ref": "6.2 Required Figure Labels[1]",
+        "source_text": "Metric.",
+        "status": "MAPPED",
+        "representations": [{"kind": "axis", "ids": ["P1", "x"]}]
+      },
+      {
+        "id": "required-labels-002",
+        "source_ref": "6.2 Required Figure Labels[2]",
+        "source_text": "Score.",
+        "status": "MAPPED",
+        "representations": [{"kind": "axis", "ids": ["P1", "y"]}]
+      },
+      {
+        "id": "required-labels-003",
+        "source_ref": "6.2 Required Figure Labels[3]",
+        "source_text": "Model A.",
+        "status": "MAPPED",
+        "representations": [{"kind": "legend", "ids": ["P1"]}]
+      },
+      {
+        "id": "required-labels-004",
+        "source_ref": "6.2 Required Figure Labels[4]",
+        "source_text": "Model B.",
+        "status": "MAPPED",
+        "representations": [{"kind": "legend", "ids": ["P1"]}]
+      }
+    ],
+    "must_not_imply": [
+      {
+        "id": "must-not-imply-001",
+        "source_ref": "6.3 Must Not Imply / Avoid[1]",
+        "source_text": "Do not truncate the bar baseline or invent significance claims.",
+        "status": "MAPPED",
+        "representations": [{"kind": "panel", "ids": ["P1"]}]
+      }
+    ],
+    "summary": {
+      "must_show_total": 1,
+      "must_show_mapped": 1,
+      "relationships_total": 1,
+      "relationships_mapped": 1,
+      "required_labels_total": 4,
+      "required_labels_mapped": 4,
+      "must_not_imply_total": 1,
+      "must_not_imply_mapped": 1,
+      "unresolved_total": 0
+    }
+  },
+  "layout": {"rows": 1, "columns": 1, "shared_legend": false},
+  "panels": [
+    {
+      "id": "P1",
+      "plot_type": "bar",
+      "data_source": "results",
+      "title": "Metric Comparison",
+      "grid": {"row": 0, "column": 0},
+      "encoding": {"category": "metric", "value": "value", "group": "method"},
+      "series": [
+        {
+          "id": "model-a",
+          "label": "Model A",
+          "filter": {"column": "method", "operator": "eq", "value": "Model A"},
+          "color": "#2F6FB6"
+        },
+        {
+          "id": "model-b",
+          "label": "Model B",
+          "filter": {"column": "method", "operator": "eq", "value": "Model B"},
+          "color": "#C56B2D",
+          "hatch": "//"
+        }
+      ],
+      "axes": {
+        "x": {"label": "Metric", "unit": null, "scale": "linear"},
+        "y": {"label": "Score", "unit": null, "scale": "linear", "limits": [0, 1]}
+      },
+      "legend": {"mode": "panel", "title": null, "location": "upper right"},
+      "annotations": [],
+      "reference_lines": [],
+      "missing_policy": "error",
+      "uncertainty": {"kind": "SD", "symmetric_column": "error"},
+      "category_order": ["Accuracy", "F1"]
+    }
+  ],
+  "style_profile": "publication-default",
+  "outputs": {
+    "source": "F921-grouped-bar.plot.py",
+    "formats": ["svg", "pdf", "png"],
+    "manifest": "F921-grouped-bar.manifest.json",
+    "qa_report": "F921-grouped-bar.qa.json",
+    "trace": "F921-grouped-bar.plot-trace.json"
+  },
+  "checks": {"grayscale_distinguishability": true, "vector_text": true, "data_binding": true},
+  "metadata": {"benchmark": "B10"}
+}

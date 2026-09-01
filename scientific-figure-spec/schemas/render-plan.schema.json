@@ -1,0 +1,269 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://scientific-figure-skills.local/schemas/render-plan.schema.json",
+  "title": "Scientific Figure RenderPlan",
+  "description": "Backend-specific execution plan derived from, but not embedded in, a FigureSpec 1.0 document.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_id",
+    "backend",
+    "figure_spec",
+    "spec_coverage",
+    "canvas",
+    "final_size",
+    "theme",
+    "elements",
+    "connectors",
+    "semantic_assertions",
+    "outputs"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.1"},
+    "plan_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "backend": {"type": "string", "minLength": 1},
+    "figure_spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "spec_version", "figure_id"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "spec_version": {"const": "1.0"},
+        "figure_id": {"type": "string", "pattern": "^F[0-9]{3,}$"}
+      }
+    },
+    "spec_coverage": {"$ref": "#/$defs/spec_coverage"},
+    "canvas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "unit", "margin", "background"],
+      "properties": {
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "height": {"type": "number", "exclusiveMinimum": 0},
+        "unit": {"const": "px"},
+        "margin": {"type": "number", "minimum": 0},
+        "background": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}
+      }
+    },
+    "final_size": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "unit", "minimum_text_size_pt"],
+      "properties": {
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "height": {"type": "number", "exclusiveMinimum": 0},
+        "unit": {"enum": ["mm", "in", "px"]},
+        "minimum_text_size_pt": {"type": "number", "minimum": 4}
+      }
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["font_family", "font_size_px", "title_font_size_px", "line_width_px", "palette"],
+      "properties": {
+        "font_family": {"type": "string", "minLength": 1},
+        "font_size_px": {"type": "number", "exclusiveMinimum": 0},
+        "title_font_size_px": {"type": "number", "exclusiveMinimum": 0},
+        "line_width_px": {"type": "number", "exclusiveMinimum": 0},
+        "palette": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}
+        }
+      }
+    },
+    "elements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/element"}
+    },
+    "connectors": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/connector"}
+    },
+    "semantic_assertions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/assertion"}
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "formats", "manifest", "qa_report"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "formats": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["svg", "pdf", "png"]}
+        },
+        "manifest": {"type": "string", "minLength": 1},
+        "qa_report": {"type": "string", "minLength": 1}
+      }
+    },
+    "metadata": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {
+    "geometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": {"type": "number"},
+        "y": {"type": "number"},
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "height": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "style_tokens": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fill": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "stroke": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "font_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "font_size_px": {"type": "number", "exclusiveMinimum": 0},
+        "stroke_width_px": {"type": "number", "exclusiveMinimum": 0},
+        "bold": {"type": "boolean"},
+        "rounded": {"type": "boolean"},
+        "dashed": {"type": "boolean"},
+        "align": {"enum": ["left", "center", "right"]},
+        "vertical_align": {"enum": ["top", "middle", "bottom"]}
+      }
+    },
+    "element": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "label", "semantic_role", "geometry", "style_tokens"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"},
+        "kind": {"enum": ["container", "node", "label", "group", "diagnostic", "annotation"]},
+        "label": {"type": "string"},
+        "semantic_role": {"type": "string", "minLength": 1},
+        "parent_id": {"type": ["string", "null"]},
+        "representation_origin": {
+          "enum": ["SPEC_LABEL", "SPEC_CONTENT", "SPEC_RELATIONSHIP", "DERIVED_HELPER"]
+        },
+        "geometry": {"$ref": "#/$defs/geometry"},
+        "style_tokens": {"$ref": "#/$defs/style_tokens"},
+        "source_ref": {"type": ["string", "null"]}
+      }
+    },
+    "connector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source", "target", "relation", "directed", "style_tokens"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"},
+        "source": {"type": "string", "minLength": 1},
+        "target": {"type": "string", "minLength": 1},
+        "relation": {"type": "string", "minLength": 1},
+        "directed": {"type": "boolean"},
+        "label": {"type": "string"},
+        "representation_origin": {
+          "enum": ["SPEC_RELATIONSHIP", "DERIVED_HELPER"]
+        },
+        "source_ref": {"type": ["string", "null"]},
+        "style_tokens": {"$ref": "#/$defs/style_tokens"}
+      }
+    },
+    "coverage_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ids"],
+      "properties": {
+        "kind": {"enum": ["element", "connector", "parent_child", "assertion"]},
+        "ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "coverage_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_ref", "source_text", "status", "representations"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,127}$"},
+        "source_ref": {"type": "string", "minLength": 1},
+        "source_text": {"type": "string", "minLength": 1},
+        "relation_type": {
+          "enum": [
+            "flow",
+            "comparison",
+            "containment",
+            "evidence_support",
+            "independence",
+            "evaluation_output",
+            "unknown"
+          ]
+        },
+        "status": {"enum": ["MAPPED", "UNRESOLVED"]},
+        "representations": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/coverage_ref"}
+        },
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "spec_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "must_show", "relationships", "summary"],
+      "properties": {
+        "status": {"enum": ["COMPLETE", "BLOCKED"]},
+        "must_show": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/coverage_item"}
+        },
+        "relationships": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/coverage_item"}
+        },
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "must_show_total",
+            "must_show_mapped",
+            "relationships_total",
+            "relationships_mapped",
+            "unresolved_total"
+          ],
+          "properties": {
+            "must_show_total": {"type": "integer", "minimum": 0},
+            "must_show_mapped": {"type": "integer", "minimum": 0},
+            "relationships_total": {"type": "integer", "minimum": 0},
+            "relationships_mapped": {"type": "integer", "minimum": 0},
+            "unresolved_total": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "severity", "params"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"},
+        "kind": {
+          "enum": [
+            "required_label",
+            "required_relation",
+            "forbidden_relation",
+            "role_color",
+            "no_embedded_raster",
+            "within_canvas",
+            "minimum_text_size"
+          ]
+        },
+        "severity": {"enum": ["BLOCKING", "MAJOR", "MINOR"]},
+        "params": {"type": "object", "additionalProperties": true},
+        "why": {"type": "string"}
+      }
+    }
+  }
+}

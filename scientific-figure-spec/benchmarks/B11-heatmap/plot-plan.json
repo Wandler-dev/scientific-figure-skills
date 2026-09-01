@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "F922-matplotlib-v1",
+  "figure_id": "F922",
+  "backend": "matplotlib",
+  "figure_spec": {
+    "path": "F922-heatmap.md",
+    "sha256": "b2f89491905eaa4aac92295c3a02a00ab8ceab1c7fe833faf385121153b6ad87",
+    "spec_version": "1.0",
+    "figure_id": "F922"
+  },
+  "target": {"width": 90, "height": 75, "unit": "mm", "dpi": 300, "minimum_text_size_pt": 6.5},
+  "data_sources": [
+    {
+      "id": "results",
+      "path": "data.csv",
+      "format": "csv",
+      "sha256": "dc837b140e6876cf9fff39693fba666e82cc19fac97002e3d89ebbf498917f65",
+      "role": "authoritative_plot_data"
+    }
+  ],
+  "spec_coverage": {
+    "status": "COMPLETE",
+    "must_show": [
+      {
+        "id": "must-show-001",
+        "source_ref": "3.1 Must Show[1]",
+        "source_text": "Scores for both models across all three tasks.",
+        "status": "MAPPED",
+        "representations": [
+          {"kind": "panel", "ids": ["P1"]},
+          {"kind": "data_binding", "ids": ["results"]}
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "id": "relationships-001",
+        "source_ref": "4.1 Relationships[1]",
+        "source_text": "Each cell maps one model and one task to one recorded score. Relation: categorical pair to quantitative value.",
+        "status": "MAPPED",
+        "representations": [
+          {"kind": "axis", "ids": ["P1", "x"]},
+          {"kind": "axis", "ids": ["P1", "y"]},
+          {"kind": "data_binding", "ids": ["results"]}
+        ]
+      }
+    ],
+    "required_labels": [
+      {
+        "id": "required-labels-001",
+        "source_ref": "6.2 Required Figure Labels[1]",
+        "source_text": "Model.",
+        "status": "MAPPED",
+        "representations": [{"kind": "axis", "ids": ["P1", "x"]}]
+      },
+      {
+        "id": "required-labels-002",
+        "source_ref": "6.2 Required Figure Labels[2]",
+        "source_text": "Task.",
+        "status": "MAPPED",
+        "representations": [{"kind": "axis", "ids": ["P1", "y"]}]
+      },
+      {
+        "id": "required-labels-003",
+        "source_ref": "6.2 Required Figure Labels[3]",
+        "source_text": "Score.",
+        "status": "MAPPED",
+        "representations": [{"kind": "panel", "ids": ["P1"]}]
+      }
+    ],
+    "must_not_imply": [
+      {
+        "id": "must-not-imply-001",
+        "source_ref": "6.3 Must Not Imply / Avoid[1]",
+        "source_text": "Do not use an undeclared diverging center or invent missing cells.",
+        "status": "MAPPED",
+        "representations": [{"kind": "panel", "ids": ["P1"]}]
+      }
+    ],
+    "summary": {
+      "must_show_total": 1,
+      "must_show_mapped": 1,
+      "relationships_total": 1,
+      "relationships_mapped": 1,
+      "required_labels_total": 3,
+      "required_labels_mapped": 3,
+      "must_not_imply_total": 1,
+      "must_not_imply_mapped": 1,
+      "unresolved_total": 0
+    }
+  },
+  "layout": {"rows": 1, "columns": 1, "shared_legend": false},
+  "panels": [
+    {
+      "id": "P1",
+      "plot_type": "heatmap",
+      "data_source": "results",
+      "title": "Task-by-Model Score",
+      "grid": {"row": 0, "column": 0},
+      "encoding": {"x": "model", "y": "task", "value": "score"},
+      "series": [],
+      "axes": {
+        "x": {"label": "Model", "unit": null, "scale": "linear"},
+        "y": {"label": "Task", "unit": null, "scale": "linear"}
+      },
+      "legend": {"mode": "none", "title": null},
+      "annotations": [],
+      "reference_lines": [],
+      "missing_policy": "error",
+      "color_scale": {"kind": "sequential", "cmap": "viridis", "label": "Score", "unit": null}
+    }
+  ],
+  "style_profile": "publication-default",
+  "outputs": {
+    "source": "F922-heatmap.plot.py",
+    "formats": ["svg", "pdf", "png"],
+    "manifest": "F922-heatmap.manifest.json",
+    "qa_report": "F922-heatmap.qa.json",
+    "trace": "F922-heatmap.plot-trace.json"
+  },
+  "checks": {"grayscale_distinguishability": true, "vector_text": true, "data_binding": true},
+  "metadata": {"benchmark": "B11"}
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://scientific-figure-skills.local/schemas/artifact-manifest.schema.json",
+  "title": "Scientific Figure Artifact Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "status",
+    "plan",
+    "source",
+    "exporter",
+    "artifacts",
+    "issues",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "status": {"enum": ["COMPLETED", "PARTIAL", "BLOCKED", "FAILED"]},
+    "plan": {"$ref": "#/$defs/file_ref"},
+    "source": {"$ref": "#/$defs/file_ref"},
+    "exporter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["backend", "command", "version", "exit_code"],
+      "properties": {
+        "backend": {"type": "string", "minLength": 1},
+        "command": {"type": "array", "items": {"type": "string"}},
+        "version": {"type": ["string", "null"]},
+        "exit_code": {"type": ["integer", "null"]}
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "issues": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/issue"}
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "metadata": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes", "media_type"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "media_type": {"type": "string", "minLength": 1}
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "unit"],
+      "properties": {
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "height": {"type": "number", "exclusiveMinimum": 0},
+        "unit": {"enum": ["px", "pt", "mm", "in", "viewBox"]}
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes", "media_type", "format"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "media_type": {"type": "string", "minLength": 1},
+        "format": {"enum": ["svg", "pdf", "png"]},
+        "dimensions": {"$ref": "#/$defs/dimensions"}
+      }
+    },
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["severity", "code", "message"],
+      "properties": {
+        "severity": {"enum": ["ERROR", "WARNING", "INFO"]},
+        "code": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]+$"},
+        "message": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

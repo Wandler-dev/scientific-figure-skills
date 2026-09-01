@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+build/
+dist/
+*.tmp
+IMPLEMENTATION_REPORT*.md

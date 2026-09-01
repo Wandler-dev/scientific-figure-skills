@@ -1,0 +1,160 @@
+{
+  "schema_version": "1.0",
+  "plan_id": "F920-matplotlib-v1",
+  "figure_id": "F920",
+  "backend": "matplotlib",
+  "figure_spec": {
+    "path": "F920-line-uncertainty.md",
+    "sha256": "7f89189ad25ff2b71c9b61dcedb93f83d6ed297119fdc5eb94b3fe15981b1d16",
+    "spec_version": "1.0",
+    "figure_id": "F920"
+  },
+  "target": {
+    "width": 180,
+    "height": 100,
+    "unit": "mm",
+    "dpi": 300,
+    "minimum_text_size_pt": 6.5
+  },
+  "data_sources": [
+    {
+      "id": "results",
+      "path": "data.csv",
+      "format": "csv",
+      "sha256": "bae43e34bff7875f28dada3a4938ab65429501dc798ff08fe6b1529b719aeb55",
+      "role": "authoritative_plot_data"
+    }
+  ],
+  "spec_coverage": {
+    "status": "COMPLETE",
+    "must_show": [
+      {
+        "id": "must-show-001",
+        "source_ref": "3.1 Must Show[1]",
+        "source_text": "Model A and Model B validation accuracy across epochs with precomputed 95% confidence intervals.",
+        "status": "MAPPED",
+        "representations": [
+          {"kind": "panel", "ids": ["P1"]},
+          {"kind": "series", "ids": ["P1", "model-a"]},
+          {"kind": "series", "ids": ["P1", "model-b"]},
+          {"kind": "data_binding", "ids": ["results"]}
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "id": "relationships-001",
+        "source_ref": "4.1 Relationships[1]",
+        "source_text": "Epoch is encoded on x and validation accuracy on y for each model. Relation: quantitative x/y encoding.",
+        "status": "MAPPED",
+        "representations": [
+          {"kind": "axis", "ids": ["P1", "x"]},
+          {"kind": "axis", "ids": ["P1", "y"]}
+        ]
+      }
+    ],
+    "required_labels": [
+      {
+        "id": "required-labels-001",
+        "source_ref": "6.2 Required Figure Labels[1]",
+        "source_text": "Epoch.",
+        "status": "MAPPED",
+        "representations": [{"kind": "axis", "ids": ["P1", "x"]}]
+      },
+      {
+        "id": "required-labels-002",
+        "source_ref": "6.2 Required Figure Labels[2]",
+        "source_text": "Validation Accuracy.",
+        "status": "MAPPED",
+        "representations": [{"kind": "axis", "ids": ["P1", "y"]}]
+      },
+      {
+        "id": "required-labels-003",
+        "source_ref": "6.2 Required Figure Labels[3]",
+        "source_text": "Model A.",
+        "status": "MAPPED",
+        "representations": [{"kind": "legend", "ids": ["P1"]}]
+      },
+      {
+        "id": "required-labels-004",
+        "source_ref": "6.2 Required Figure Labels[4]",
+        "source_text": "Model B.",
+        "status": "MAPPED",
+        "representations": [{"kind": "legend", "ids": ["P1"]}]
+      }
+    ],
+    "must_not_imply": [
+      {
+        "id": "must-not-imply-001",
+        "source_ref": "6.3 Must Not Imply / Avoid[1]",
+        "source_text": "Do not interpolate across missing observations or infer statistical significance.",
+        "status": "MAPPED",
+        "representations": [{"kind": "panel", "ids": ["P1"]}]
+      }
+    ],
+    "summary": {
+      "must_show_total": 1,
+      "must_show_mapped": 1,
+      "relationships_total": 1,
+      "relationships_mapped": 1,
+      "required_labels_total": 4,
+      "required_labels_mapped": 4,
+      "must_not_imply_total": 1,
+      "must_not_imply_mapped": 1,
+      "unresolved_total": 0
+    }
+  },
+  "layout": {"rows": 1, "columns": 1, "shared_legend": false},
+  "panels": [
+    {
+      "id": "P1",
+      "plot_type": "line",
+      "data_source": "results",
+      "title": "Validation Accuracy",
+      "grid": {"row": 0, "column": 0},
+      "encoding": {"x": "epoch", "y": "accuracy", "group": "model"},
+      "series": [
+        {
+          "id": "model-a",
+          "label": "Model A",
+          "filter": {"column": "model", "operator": "eq", "value": "Model A"},
+          "color": "#2F6FB6",
+          "marker": "o",
+          "line_style": "-"
+        },
+        {
+          "id": "model-b",
+          "label": "Model B",
+          "filter": {"column": "model", "operator": "eq", "value": "Model B"},
+          "color": "#C56B2D",
+          "marker": "s",
+          "line_style": "--"
+        }
+      ],
+      "axes": {
+        "x": {"label": "Epoch", "unit": null, "scale": "linear"},
+        "y": {"label": "Validation Accuracy", "unit": null, "scale": "linear", "limits": [0, 1]}
+      },
+      "legend": {"mode": "panel", "title": null, "location": "lower right"},
+      "annotations": [],
+      "reference_lines": [],
+      "missing_policy": "gap",
+      "uncertainty": {"kind": "95% CI", "lower_column": "ci_low", "upper_column": "ci_high"},
+      "sort_by": "epoch"
+    }
+  ],
+  "style_profile": "publication-default",
+  "outputs": {
+    "source": "F920-line-uncertainty.plot.py",
+    "formats": ["svg", "pdf", "png"],
+    "manifest": "F920-line-uncertainty.manifest.json",
+    "qa_report": "F920-line-uncertainty.qa.json",
+    "trace": "F920-line-uncertainty.plot-trace.json"
+  },
+  "checks": {
+    "grayscale_distinguishability": true,
+    "vector_text": true,
+    "data_binding": true
+  },
+  "metadata": {"benchmark": "B09"}
+}

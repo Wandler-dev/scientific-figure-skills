@@ -1,0 +1,23 @@
+{
+  "benchmark_version": "1.0",
+  "benchmark_id": "B04",
+  "title": "Final-size readability and artifact integrity",
+  "objective": "Readable labels pass at final size while an undersized mutation requires revision.",
+  "canvas": {"width": 1000, "height": 560},
+  "final_size": {"width": 180, "height": 100.8, "unit": "mm", "minimum_text_size_pt": 6.5},
+  "elements": [
+    {"id": "panel-a", "label": "Compact Panel A", "role": "content", "x": 130, "y": 180, "width": 300, "height": 160, "font_size_px": 18},
+    {"id": "panel-b", "label": "Compact Panel B", "role": "content", "x": 570, "y": 180, "width": 300, "height": 160, "font_size_px": 18}
+  ],
+  "connectors": [
+    {"id": "panel-a-b", "source": "panel-a", "target": "panel-b", "relation": "comparison", "directed": false}
+  ],
+  "forbidden_relations": [],
+  "formats": ["svg", "pdf", "png"],
+  "mutation": "reduce_panel_a_font",
+  "expected": {
+    "baseline_outcome": "AUTOMATED_CHECKS_PASSED",
+    "mutated_outcome": "REVISION_REQUIRED",
+    "issue_code": "visual.text.too_small"
+  }
+}

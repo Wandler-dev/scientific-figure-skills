@@ -1,0 +1,5 @@
+method,metric,value,error
+Model A,Accuracy,0.82,0.02
+Model A,F1,0.78,0.03
+Model B,Accuracy,0.76,0.02
+Model B,F1,0.73,0.025

@@ -1,0 +1,20 @@
+font.family: sans-serif
+font.sans-serif: DejaVu Sans, Arial, Liberation Sans
+font.size: 8
+axes.labelsize: 8
+axes.titlesize: 9
+axes.linewidth: 0.8
+xtick.labelsize: 7
+ytick.labelsize: 7
+legend.fontsize: 7
+lines.linewidth: 1.4
+lines.markersize: 4
+grid.linewidth: 0.5
+grid.alpha: 0.25
+figure.facecolor: white
+axes.facecolor: white
+savefig.facecolor: white
+savefig.bbox: standard
+svg.fonttype: none
+pdf.fonttype: 42
+ps.fonttype: 42

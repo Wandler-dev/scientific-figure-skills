@@ -1,0 +1,21 @@
+{
+  "benchmark_version": "1.0",
+  "benchmark_id": "B01",
+  "title": "Minimal directed workflow",
+  "objective": "A small valid workflow must survive the complete execution loop without issues.",
+  "canvas": {"width": 1000, "height": 560},
+  "final_size": {"width": 180, "height": 100.8, "unit": "mm", "minimum_text_size_pt": 6.5},
+  "elements": [
+    {"id": "input", "label": "Input Evidence", "role": "evidence", "x": 60, "y": 220, "width": 220, "height": 90, "font_size_px": 18},
+    {"id": "system", "label": "Processing System", "role": "system", "x": 390, "y": 220, "width": 220, "height": 90, "font_size_px": 18},
+    {"id": "output", "label": "Structured Output", "role": "content", "x": 720, "y": 220, "width": 220, "height": 90, "font_size_px": 18}
+  ],
+  "connectors": [
+    {"id": "input-system", "source": "input", "target": "system", "relation": "input", "directed": true},
+    {"id": "system-output", "source": "system", "target": "output", "relation": "generated output", "directed": true}
+  ],
+  "forbidden_relations": [],
+  "formats": ["svg", "pdf", "png"],
+  "mutation": null,
+  "expected": {"baseline_outcome": "AUTOMATED_CHECKS_PASSED"}
+}

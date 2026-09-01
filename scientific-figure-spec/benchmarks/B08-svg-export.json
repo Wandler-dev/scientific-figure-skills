@@ -1,0 +1,12 @@
+{
+  "benchmark_id": "B08",
+  "name": "Native SVG export capability",
+  "expected": {
+    "svg_without_renderer": "COMPLETED",
+    "png_without_renderer": "BLOCKED",
+    "pdf_without_renderer": "BLOCKED",
+    "mixed_without_renderer": "PARTIAL",
+    "explicit_test_renderer": "COMPLETED",
+    "fake_renderer_is_production_fallback": false
+  }
+}

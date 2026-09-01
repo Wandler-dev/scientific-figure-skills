@@ -1,0 +1,7 @@
+model,task,score
+Model A,Task 1,0.81
+Model B,Task 1,0.76
+Model A,Task 2,0.74
+Model B,Task 2,0.79
+Model A,Task 3,0.88
+Model B,Task 3,0.83

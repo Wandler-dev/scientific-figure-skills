@@ -1,0 +1,17 @@
+{
+  "benchmark_id": "B07",
+  "name": "Deterministic native SVG defects",
+  "defects": {
+    "duplicate_id": "svg.structure.duplicate_id",
+    "broken_marker": "svg.reference.broken_marker",
+    "external_image": "svg.asset.external_uri",
+    "embedded_raster": "svg.asset.embedded_raster",
+    "foreign_object": "svg.editability.forbidden_element",
+    "missing_required_label": "svg.text.plan_label_missing",
+    "missing_required_relation": "svg.connector.object_missing",
+    "wrong_parent": "svg.structure.parent_mismatch",
+    "outside_viewbox": "svg.geometry.outside_viewbox",
+    "undersized_final_text": "svg.text.final_size_below_threshold",
+    "unplanned_directed_relation": "svg.connector.unplanned"
+  }
+}

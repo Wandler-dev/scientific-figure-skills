@@ -1,0 +1,7 @@
+epoch,model,accuracy,ci_low,ci_high
+1,Model A,0.70,0.67,0.73
+2,Model A,0.76,0.73,0.79
+3,Model A,0.80,0.77,0.83
+1,Model B,0.66,0.63,0.69
+2,Model B,,,
+3,Model B,0.75,0.72,0.78

@@ -1,0 +1,30 @@
+{
+  "benchmark_version": "1.0",
+  "benchmark_id": "B02",
+  "title": "Candidate and Reference isolation",
+  "objective": "Reference participates in evaluation but must never become an AI System input.",
+  "canvas": {"width": 1000, "height": 560},
+  "final_size": {"width": 180, "height": 100.8, "unit": "mm", "minimum_text_size_pt": 6.5},
+  "elements": [
+    {"id": "ai-system", "label": "AI System", "role": "system", "x": 70, "y": 150, "width": 210, "height": 90, "font_size_px": 18},
+    {"id": "candidate", "label": "Candidate", "role": "candidate", "x": 380, "y": 110, "width": 210, "height": 90, "font_size_px": 18},
+    {"id": "reference", "label": "Reference", "role": "reference", "x": 380, "y": 310, "width": 210, "height": 90, "font_size_px": 18},
+    {"id": "diagnostic", "label": "Diagnostic", "role": "diagnostic", "x": 720, "y": 210, "width": 210, "height": 90, "font_size_px": 18}
+  ],
+  "connectors": [
+    {"id": "system-candidate", "source": "ai-system", "target": "candidate", "relation": "generated output", "directed": true},
+    {"id": "candidate-reference", "source": "candidate", "target": "reference", "relation": "alignment and comparison", "directed": false},
+    {"id": "candidate-diagnostic", "source": "candidate", "target": "diagnostic", "relation": "evaluation output", "directed": true},
+    {"id": "reference-diagnostic", "source": "reference", "target": "diagnostic", "relation": "evaluation target", "directed": true}
+  ],
+  "forbidden_relations": [
+    {"id": "no-reference-system", "source": "reference", "target": "ai-system", "directed": true}
+  ],
+  "formats": ["svg", "pdf", "png"],
+  "mutation": "inject_forbidden_reference_to_system",
+  "expected": {
+    "baseline_outcome": "AUTOMATED_CHECKS_PASSED",
+    "mutated_outcome": "BLOCKED",
+    "issue_code": "semantic.forbidden_relation.present"
+  }
+}

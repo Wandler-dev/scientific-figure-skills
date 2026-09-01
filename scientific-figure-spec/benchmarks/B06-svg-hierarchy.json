@@ -1,0 +1,14 @@
+{
+  "benchmark_id": "B06",
+  "name": "Native containment hierarchy",
+  "labels": ["Episode", "Action"],
+  "relationship": "Episode contains Action.",
+  "relation_kind": "containment",
+  "expected": {
+    "parent": "Episode",
+    "child": "Action",
+    "flow_connector": false,
+    "drawio_parent_child": true,
+    "svg_nested_group": true
+  }
+}

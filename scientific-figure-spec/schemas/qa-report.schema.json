@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://scientific-figure-skills.local/schemas/qa-report.schema.json",
+  "title": "Scientific Figure QA Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "assessment_scope",
+    "human_review_status",
+    "outcome",
+    "plan",
+    "source",
+    "artifacts",
+    "final_size",
+    "summary",
+    "checks",
+    "issues",
+    "inspected_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.1"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "assessment_scope": {"const": "AUTOMATED_EXECUTION"},
+    "human_review_status": {"enum": ["NOT_PERFORMED", "RECORDED_SEPARATELY"]},
+    "outcome": {
+      "enum": ["AUTOMATED_CHECKS_PASSED", "PASS", "REVISION_REQUIRED", "BLOCKED"]
+    },
+    "plan": {"$ref": "#/$defs/file_ref"},
+    "source": {"$ref": "#/$defs/file_ref"},
+    "artifacts": {"type": "array", "items": {"$ref": "#/$defs/file_ref"}},
+    "final_size": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "unit"],
+      "properties": {
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "height": {"type": "number", "exclusiveMinimum": 0},
+        "unit": {"enum": ["mm", "in", "px"]}
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blocking", "major", "minor"],
+      "properties": {
+        "blocking": {"type": "integer", "minimum": 0},
+        "major": {"type": "integer", "minimum": 0},
+        "minor": {"type": "integer", "minimum": 0}
+      }
+    },
+    "checks": {"type": "array", "items": {"$ref": "#/$defs/check"}},
+    "issues": {"type": "array", "items": {"$ref": "#/$defs/qa_issue"}},
+    "inspected_at": {"type": "string", "format": "date-time"},
+    "metadata": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "category", "message"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"},
+        "status": {"enum": ["PASS", "FAIL", "SKIP"]},
+        "category": {"enum": ["Scientific", "Communication", "Visual", "Technical"]},
+        "message": {"type": "string", "minLength": 1},
+        "evidence": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "artifact": {"type": "string"},
+        "cell_id": {"type": "string"},
+        "bbox": {
+          "type": "array",
+          "prefixItems": [
+            {"type": "number"},
+            {"type": "number"},
+            {"type": "number"},
+            {"type": "number"}
+          ],
+          "minItems": 4,
+          "maxItems": 4
+        }
+      }
+    },
+    "qa_issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "severity",
+        "category",
+        "code",
+        "issue",
+        "why_it_matters",
+        "recommended_fix",
+        "repairability"
+      ],
+      "properties": {
+        "severity": {"enum": ["BLOCKING", "MAJOR", "MINOR"]},
+        "category": {"enum": ["Scientific", "Communication", "Visual", "Technical"]},
+        "code": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]+$"},
+        "issue": {"type": "string", "minLength": 1},
+        "why_it_matters": {"type": "string", "minLength": 1},
+        "recommended_fix": {"type": "string", "minLength": 1},
+        "repairability": {
+          "enum": ["SAFE_LOCAL", "NEEDS_DESIGN", "NEEDS_SCIENTIFIC_INPUT", "NONE"]
+        },
+        "location": {"$ref": "#/$defs/location"},
+        "evidence": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

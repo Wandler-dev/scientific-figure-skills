@@ -1,0 +1,382 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://scientific-figure-skills.local/schemas/plot-plan.schema.json",
+  "title": "Scientific Figure PlotPlan",
+  "description": "Data-bound quantitative plotting plan kept separate from the structured-diagram RenderPlan.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_id",
+    "figure_id",
+    "backend",
+    "figure_spec",
+    "target",
+    "data_sources",
+    "spec_coverage",
+    "layout",
+    "panels",
+    "style_profile",
+    "outputs",
+    "checks"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "plan_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "figure_id": {"type": "string", "pattern": "^F[0-9]{3,}$"},
+    "backend": {"const": "matplotlib"},
+    "figure_spec": {"$ref": "#/$defs/figure_spec"},
+    "target": {"$ref": "#/$defs/target"},
+    "data_sources": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/data_source"}
+    },
+    "spec_coverage": {"$ref": "#/$defs/spec_coverage"},
+    "layout": {"$ref": "#/$defs/layout"},
+    "panels": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/panel"}
+    },
+    "style_profile": {
+      "enum": ["publication-default", "presentation", "grayscale"]
+    },
+    "outputs": {"$ref": "#/$defs/outputs"},
+    "checks": {"$ref": "#/$defs/checks"},
+    "metadata": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {
+    "figure_spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "spec_version", "figure_id"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "spec_version": {"const": "1.0"},
+        "figure_id": {"type": "string", "pattern": "^F[0-9]{3,}$"}
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "unit", "dpi", "minimum_text_size_pt"],
+      "properties": {
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "height": {"type": "number", "exclusiveMinimum": 0},
+        "unit": {"enum": ["mm", "in"]},
+        "dpi": {"type": "integer", "minimum": 72},
+        "minimum_text_size_pt": {"type": "number", "minimum": 4}
+      }
+    },
+    "data_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "format", "sha256", "role"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"},
+        "path": {"type": "string", "minLength": 1},
+        "format": {"enum": ["csv", "tsv", "json-records"]},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "role": {"const": "authoritative_plot_data"}
+      }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rows", "columns", "shared_legend"],
+      "properties": {
+        "rows": {"type": "integer", "minimum": 1},
+        "columns": {"type": "integer", "minimum": 1},
+        "shared_legend": {"type": "boolean"},
+        "horizontal_space": {"type": "number", "minimum": 0},
+        "vertical_space": {"type": "number", "minimum": 0}
+      }
+    },
+    "grid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["row", "column"],
+      "properties": {
+        "row": {"type": "integer", "minimum": 0},
+        "column": {"type": "integer", "minimum": 0},
+        "rowspan": {"type": "integer", "minimum": 1},
+        "colspan": {"type": "integer", "minimum": 1}
+      }
+    },
+    "encoding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "x": {"type": "string", "minLength": 1},
+        "y": {"type": "string", "minLength": 1},
+        "category": {"type": "string", "minLength": 1},
+        "value": {"type": "string", "minLength": 1},
+        "group": {"type": "string", "minLength": 1},
+        "size": {"type": "string", "minLength": 1}
+      }
+    },
+    "filter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["column", "operator"],
+      "properties": {
+        "column": {"type": "string", "minLength": 1},
+        "operator": {"enum": ["eq", "in"]},
+        "value": {},
+        "values": {"type": "array"}
+      }
+    },
+    "series": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"},
+        "label": {"type": "string", "minLength": 1},
+        "data_source": {"type": "string", "minLength": 1},
+        "filter": {"$ref": "#/$defs/filter"},
+        "color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "marker": {"type": "string", "minLength": 1},
+        "line_style": {"type": "string", "minLength": 1},
+        "hatch": {"type": "string", "minLength": 1}
+      }
+    },
+    "axis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "unit", "scale"],
+      "properties": {
+        "label": {"type": "string", "minLength": 1},
+        "unit": {"type": ["string", "null"]},
+        "scale": {"enum": ["linear", "log"]},
+        "limits": {
+          "type": "array",
+          "prefixItems": [{"type": "number"}, {"type": "number"}],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "allow_clipping": {"type": "boolean"},
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "axes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": {"$ref": "#/$defs/axis"},
+        "y": {"$ref": "#/$defs/axis"}
+      }
+    },
+    "legend": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {"enum": ["panel", "figure", "none"]},
+        "title": {"type": ["string", "null"]},
+        "location": {"type": "string", "minLength": 1}
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "lower_column": {"type": "string", "minLength": 1},
+        "upper_column": {"type": "string", "minLength": 1},
+        "symmetric_column": {"type": "string", "minLength": 1}
+      }
+    },
+    "annotation_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {"enum": ["figure_spec_label", "data_column", "source_bound_constant"]},
+        "data_source": {"type": "string", "minLength": 1},
+        "column": {"type": "string", "minLength": 1},
+        "filter": {"$ref": "#/$defs/filter"},
+        "value": {}
+      }
+    },
+    "annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text", "source"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"},
+        "text": {"type": "string", "minLength": 1},
+        "source": {"$ref": "#/$defs/annotation_source"},
+        "x": {"type": "number"},
+        "y": {"type": "number"}
+      }
+    },
+    "reference_line": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "axis", "value", "source_type"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"},
+        "axis": {"enum": ["x", "y"]},
+        "value": {"type": "number"},
+        "label": {"type": ["string", "null"]},
+        "source_type": {"enum": ["design_reference", "source_bound_constant"]},
+        "source": {"$ref": "#/$defs/annotation_source"}
+      }
+    },
+    "color_scale": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "cmap"],
+      "properties": {
+        "kind": {"enum": ["sequential", "diverging"]},
+        "cmap": {"type": "string", "minLength": 1},
+        "center": {"type": "number"},
+        "label": {"type": "string", "minLength": 1},
+        "unit": {"type": ["string", "null"]}
+      }
+    },
+    "panel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "plot_type",
+        "data_source",
+        "title",
+        "grid",
+        "encoding",
+        "series",
+        "axes",
+        "legend",
+        "annotations",
+        "reference_lines",
+        "missing_policy"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]{0,127}$"},
+        "plot_type": {"enum": ["line", "scatter", "bar", "heatmap"]},
+        "data_source": {"type": "string", "minLength": 1},
+        "title": {"type": "string"},
+        "grid": {"$ref": "#/$defs/grid"},
+        "encoding": {"$ref": "#/$defs/encoding"},
+        "series": {"type": "array", "items": {"$ref": "#/$defs/series"}},
+        "axes": {"$ref": "#/$defs/axes"},
+        "legend": {"$ref": "#/$defs/legend"},
+        "annotations": {"type": "array", "items": {"$ref": "#/$defs/annotation"}},
+        "reference_lines": {"type": "array", "items": {"$ref": "#/$defs/reference_line"}},
+        "missing_policy": {"enum": ["error", "gap", "drop"]},
+        "uncertainty": {"$ref": "#/$defs/uncertainty"},
+        "category_order": {
+          "type": "array",
+          "items": {"type": ["string", "number"]}
+        },
+        "sort_by": {"type": "string", "minLength": 1},
+        "allow_nonzero_baseline": {"type": "boolean"},
+        "nonzero_baseline_rationale": {"type": "string", "minLength": 1},
+        "color_scale": {"$ref": "#/$defs/color_scale"}
+      }
+    },
+    "coverage_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ids"],
+      "properties": {
+        "kind": {
+          "enum": ["panel", "series", "axis", "legend", "annotation", "reference_line", "data_binding"]
+        },
+        "ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "coverage_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_ref", "source_text", "status", "representations"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,127}$"},
+        "source_ref": {"type": "string", "minLength": 1},
+        "source_text": {"type": "string", "minLength": 1},
+        "status": {"enum": ["MAPPED", "UNRESOLVED"]},
+        "representations": {"type": "array", "items": {"$ref": "#/$defs/coverage_ref"}},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "coverage_section": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/coverage_item"}
+    },
+    "coverage_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "must_show_total",
+        "must_show_mapped",
+        "relationships_total",
+        "relationships_mapped",
+        "required_labels_total",
+        "required_labels_mapped",
+        "must_not_imply_total",
+        "must_not_imply_mapped",
+        "unresolved_total"
+      ],
+      "properties": {
+        "must_show_total": {"type": "integer", "minimum": 0},
+        "must_show_mapped": {"type": "integer", "minimum": 0},
+        "relationships_total": {"type": "integer", "minimum": 0},
+        "relationships_mapped": {"type": "integer", "minimum": 0},
+        "required_labels_total": {"type": "integer", "minimum": 0},
+        "required_labels_mapped": {"type": "integer", "minimum": 0},
+        "must_not_imply_total": {"type": "integer", "minimum": 0},
+        "must_not_imply_mapped": {"type": "integer", "minimum": 0},
+        "unresolved_total": {"type": "integer", "minimum": 0}
+      }
+    },
+    "spec_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "must_show", "relationships", "required_labels", "must_not_imply", "summary"],
+      "properties": {
+        "status": {"enum": ["COMPLETE", "BLOCKED"]},
+        "must_show": {"$ref": "#/$defs/coverage_section"},
+        "relationships": {"$ref": "#/$defs/coverage_section"},
+        "required_labels": {"$ref": "#/$defs/coverage_section"},
+        "must_not_imply": {"$ref": "#/$defs/coverage_section"},
+        "summary": {"$ref": "#/$defs/coverage_summary"}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "formats", "manifest", "qa_report", "trace"],
+      "properties": {
+        "source": {"type": "string", "pattern": "\\.plot\\.py$"},
+        "formats": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["svg", "pdf", "png"]}
+        },
+        "manifest": {"type": "string", "minLength": 1},
+        "qa_report": {"type": "string", "minLength": 1},
+        "trace": {"type": "string", "minLength": 1}
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grayscale_distinguishability", "vector_text", "data_binding"],
+      "properties": {
+        "grayscale_distinguishability": {"type": "boolean"},
+        "vector_text": {"type": "boolean"},
+        "data_binding": {"const": true}
+      }
+    }
+  }
+}

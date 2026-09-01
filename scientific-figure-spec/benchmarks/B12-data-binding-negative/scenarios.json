@@ -1,0 +1,21 @@
+{
+  "benchmark_id": "B12",
+  "cases": [
+    {"id": "wrong-data-sha256", "base": "B09", "expected_code": "plot.data.hash_mismatch"},
+    {"id": "missing-data-file", "base": "B09", "expected_code": "plot.data.file_missing"},
+    {"id": "missing-column", "base": "B09", "expected_code": "plot.binding.column_missing"},
+    {"id": "missing-uncertainty-column", "base": "B09", "expected_code": "plot.binding.column_missing"},
+    {"id": "invalid-numeric-value", "base": "B09", "expected_code": "plot.data.numeric_invalid"},
+    {"id": "missing-under-error-policy", "base": "B09", "expected_code": "plot.binding.missing_value"},
+    {"id": "unresolved-coverage", "base": "B09", "expected_code": "scientific.coverage.must_show_unmapped"},
+    {"id": "unbound-manual-value", "base": "B10", "expected_code": "scientific.data.unbound_value"},
+    {"id": "log-axis-zero", "base": "B09", "expected_code": "plot.axis.log_nonpositive"},
+    {"id": "stale-figure-spec", "base": "B09", "expected_code": "plot.plan.figure_spec_hash_mismatch"},
+    {"id": "axis-clipping", "base": "B09", "expected_code": "plot.axis.data_clipped"},
+    {"id": "category-missing", "base": "B10", "expected_code": "plot.binding.category_missing"},
+    {"id": "nonzero-bar-baseline", "base": "B10", "expected_code": "plot.axis.nonzero_bar_baseline"},
+    {"id": "diverging-center-missing", "base": "B11", "expected_code": "plot.style.diverging_center_missing"},
+    {"id": "heatmap-missing-value-column", "base": "B11", "expected_code": "plot.binding.column_missing"},
+    {"id": "heatmap-unbound-manual-annotation", "base": "B11", "expected_code": "scientific.data.unbound_value"}
+  ]
+}

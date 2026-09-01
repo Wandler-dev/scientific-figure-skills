@@ -1,0 +1,19 @@
+{
+  "benchmark_id": "B05",
+  "name": "F001 semantic backend parity",
+  "figure_spec": "../examples/F001-evidence-traceable-reconstruction.md",
+  "backends": ["drawio", "svg"],
+  "compare": [
+    "elements",
+    "labels",
+    "parent_relationships",
+    "connectors",
+    "relation_kinds",
+    "semantic_roles",
+    "spec_coverage",
+    "semantic_assertions",
+    "canvas",
+    "theme"
+  ],
+  "ignore": ["source_file", "backend_xml", "producer_identity", "plan_id"]
+}
